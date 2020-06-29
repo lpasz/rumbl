@@ -23,5 +23,9 @@
     </div>
     <% end %>
 </div>
+<div>
+    <%= password_input f, :password, placeholder: "Password" %>
+    <%= error_tag f, :password %>
+</div>
 <%= submit "Create User" %>
 <% end %>
