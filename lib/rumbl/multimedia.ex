@@ -7,6 +7,22 @@ defmodule Rumbl.Multimedia do
 
   alias Rumbl.Repo
   alias Rumbl.Multimedia.Video
+  alias Rumbl.Accounts
+
+  def list_user_videos(%Accounts.User{} = user) do
+    Video # Standard Query for Videos
+    |> user_videos_query(user) # Transformed Filtered query
+    |> Repo.all() # Search all matching queries
+  end
+  def get_user_video!(%Accounts.User{} = user, id) do
+    Video # Standard Query for Videos
+    |> user_videos_query(user) # Transformed Filtered query
+    |> Repo.get!(id) # Search all matching queries
+  end
+
+  def user_videos_query(query, %Accounts.User{id: user_id}) do
+    from(vid in query, where: vid.user_id) == ^user_id) # LINQ style query
+  end
 
   @doc """
     Returns the list of videos.
@@ -20,6 +36,7 @@ defmodule Rumbl.Multimedia do
   def list_videos do
     Repo.all(Video)
   end
+
 
   @doc """
     Gets a single video.
@@ -37,6 +54,7 @@ defmodule Rumbl.Multimedia do
   """
   def get_video!(id), do: Repo.get!(Video, id)
 
+
   @doc """
     Creates a video.
 
@@ -49,9 +67,10 @@ defmodule Rumbl.Multimedia do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_video(attrs \\ %{}) do
+  def create_video(%Accounts.User{} = user, attrs \\ %{}) do
     %Video{}
     |> Video.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
