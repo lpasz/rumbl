@@ -20,8 +20,9 @@ defmodule Rumbl.Multimedia do
     |> Repo.get!(id) # Search all matching queries
   end
 
-  def user_videos_query(query, %Accounts.User{id: user_id}) do
-    from(vid in query, where: vid.user_id) == ^user_id) # LINQ style query
+  defp user_videos_query(query, %Accounts.User{id: user_id}) do
+    from v in query,
+      where: v.user_id == ^user_id
   end
 
   @doc """
@@ -36,7 +37,6 @@ defmodule Rumbl.Multimedia do
   def list_videos do
     Repo.all(Video)
   end
-
 
   @doc """
     Gets a single video.
@@ -53,7 +53,6 @@ defmodule Rumbl.Multimedia do
 
   """
   def get_video!(id), do: Repo.get!(Video, id)
-
 
   @doc """
     Creates a video.
