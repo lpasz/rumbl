@@ -38,7 +38,7 @@ defmodule RumblWeb.VideoController do
   end
 
   def update(conn, %{"id" => id, "video" => video_params}, current_user) do
-    video = Multimedia.get_video!(id)
+    video = Multimedia.get_user_video!(current_user,id)
 
     case Multimedia.update_video(video, video_params) do
       {:ok, video} ->
