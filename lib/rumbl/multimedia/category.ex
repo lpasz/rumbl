@@ -3,7 +3,7 @@ defmodule Rumbl.Multimedia.Category do
   import Ecto.Changeset
 
   schema "categories" do
-    field :name, :string
+    field :name, :string, null: false
 
     timestamps()
   end
