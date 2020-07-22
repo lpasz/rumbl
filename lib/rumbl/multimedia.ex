@@ -10,14 +10,21 @@ defmodule Rumbl.Multimedia do
   alias Rumbl.Accounts
 
   def list_user_videos(%Accounts.User{} = user) do
-    Video # Standard Query for Videos
-    |> user_videos_query(user) # Transformed Filtered query
-    |> Repo.all() # Search all matching queries
+    # Standard Query for Videos
+    Video
+    # Transformed Filtered query
+    |> user_videos_query(user)
+    # Search all matching queries
+    |> Repo.all()
   end
+
   def get_user_video!(%Accounts.User{} = user, id) do
-    Video # Standard Query for Videos
-    |> user_videos_query(user) # Transformed Filtered query
-    |> Repo.get!(id) # Search all matching queries
+    # Standard Query for Videos
+    Video
+    # Transformed Filtered query
+    |> user_videos_query(user)
+    # Search all matching queries
+    |> Repo.get!(id)
   end
 
   defp user_videos_query(query, %Accounts.User{id: user_id}) do
@@ -125,7 +132,7 @@ defmodule Rumbl.Multimedia do
 
   def list_alphabetical_categories do
     Category
-    |> Category.alphabetical
-    |> Repo.all
+    |> Category.alphabetical()
+    |> Repo.all()
   end
 end

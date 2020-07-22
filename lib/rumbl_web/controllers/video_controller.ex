@@ -38,7 +38,7 @@ defmodule RumblWeb.VideoController do
   end
 
   def update(conn, %{"id" => id, "video" => video_params}, current_user) do
-    video = Multimedia.get_user_video!(current_user,id)
+    video = Multimedia.get_user_video!(current_user, id)
 
     case Multimedia.update_video(video, video_params) do
       {:ok, video} ->
@@ -69,7 +69,7 @@ defmodule RumblWeb.VideoController do
   plug :load_categories when action in [:new, :create, :edit, :update]
 
   defp load_categories(conn, _) do
-    IO.puts "this is the load categories function"
-    assign conn, :categories, Multimedia.list_alphabetical_categories()
+    IO.puts("this is the load categories function")
+    assign(conn, :categories, Multimedia.list_alphabetical_categories())
   end
 end
