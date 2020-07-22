@@ -6,13 +6,13 @@ defmodule Rumbl.AccountsTest do
 
   # Register values for valid user and invalid user
   describe "register_user/1" do
-  @valid_attrs %{
-    name: "User",
-    username: "eva",
-    password: "secret",
-  }
+    @valid_attrs %{
+      name: "User",
+      username: "eva",
+      password: "secret"
+    }
 
-  @invalid_attrs %{}
+    @invalid_attrs %{}
   end
 
   test "with valid data inserts user" do
@@ -46,12 +46,12 @@ defmodule Rumbl.AccountsTest do
     # Get the error from change set, should be on username
     assert %{username: ["has already been taken"]} = errors_on(changeset)
     # Assert that the first user was correctly added
-    assert [%User{id: ^id}] = Accounts.list_users
+    assert [%User{id: ^id}] = Accounts.list_users()
   end
 
   test "does not accept long usernames" do
     # put an invalid username on "@valid_user" replacing the valid one
-    attrs = Map.put @valid_attrs, :username, String.duplicate("a",30)
+    attrs = Map.put(@valid_attrs, :username, String.duplicate("a", 30))
     # should be an error
     {:error, changeset} = Accounts.register_user(attrs)
     # retrieve error and should be the too long username
@@ -62,12 +62,50 @@ defmodule Rumbl.AccountsTest do
 
   test "requires password to be at least 6 chars long" do
     # put too short password on "@valid_user" overriding the valid
-    attrs = Map.put @valid_attrs, :password, "12345"
+    attrs = Map.put(@valid_attrs, :password, "12345")
     # error should be returned
     assert {:error, changeset} = Accounts.register_user(attrs)
     # check for the expected error
     assert %{password: ["should be at least 6 character(s)"]} = errors_on(changeset)
-    #nothing should have been added
-    assert Accounts.list_users == []
+    # nothing should have been added
+    assert Accounts.list_users() == []
+  end
+
+  describe "authenticate_by_username_and_password/2" do
+    @pass "123456"
+
+    setup do
+      # Run before every test to provide data
+      # To use user_fixture must be created a module
+      # called 'test_helper.ex' careful to not confuse with
+      # 'test_helper.exS'
+      {:ok, user: user_fixture(password: @pass)}
+    end
+
+    test "return user with correct password", %{user: user} do
+      # try to log with correct password
+      # no error expected
+      assert {:ok, auth_user} =
+               Accounts.authenticate_by_username_and_password(user.username, @pass)
+
+      # authenticated user id must be the same as the user who performed login
+      assert auth_user.id == user.id
+    end
+
+    test "returns unauthorized error with invalid password", %{user: user} do
+      assert {:error, :unauthorized} =
+               Accounts.authenticate_by_username_and_password(
+                 user.username,
+                 "badpassword"
+               )
+    end
+
+    test "returns not found error with no matching user for email" do
+      assert {:error, :not_found} =
+               Accounts.authenticate_by_username_and_password(
+                 "unknowuser",
+                 @pass
+               )
+    end
   end
 end
