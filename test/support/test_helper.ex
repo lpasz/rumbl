@@ -4,6 +4,11 @@ defmodule Rumbl.TestHelpers do
     Multimedia
   }
 
+  @doc """
+  Create a new user and add it to the data base
+  in attrs the :password can be pass,
+  so it will change the default
+  """
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
