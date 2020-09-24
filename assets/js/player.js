@@ -38,6 +38,6 @@ let Player = {
     {
         return this.player.seekTo( millsec / 1000 )
     }
-} 
+}
 
 export default Player
