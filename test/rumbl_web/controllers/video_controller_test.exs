@@ -93,42 +93,42 @@ defmodule RumblWeb.VideoControllerTest do
     end
   end
 
-    test "non owner cannot perform any action with video", %{conn: conn} do
-      # Create and add user
-      owner = user_fixture(username: "owner")
-      # Create and add video to previous user
-      video = video_fixture(owner, @create_attrs)
-      # Create a new user to check if can acess the owner videos
-      non_owner = user_fixture(username: "sneaky")
-      # Loggin the non_owner of the video user
-      conn = assign(conn, :current_user, non_owner)
+  test "non owner cannot perform any action with video", %{conn: conn} do
+    # Create and add user
+    owner = user_fixture(username: "owner")
+    # Create and add video to previous user
+    video = video_fixture(owner, @create_attrs)
+    # Create a new user to check if can acess the owner videos
+    non_owner = user_fixture(username: "sneaky")
+    # Loggin the non_owner of the video user
+    conn = assign(conn, :current_user, non_owner)
 
-      assert_error_sent(
-        :not_found,
-        fn ->
-          get(conn, Routes.video_path(conn, :show, video))
-        end
-      )
+    assert_error_sent(
+      :not_found,
+      fn ->
+        get(conn, Routes.video_path(conn, :show, video))
+      end
+    )
 
-      assert_error_sent(
-        :not_found,
-        fn ->
-          get(conn, Routes.video_path(conn, :edit, video))
-        end
-      )
+    assert_error_sent(
+      :not_found,
+      fn ->
+        get(conn, Routes.video_path(conn, :edit, video))
+      end
+    )
 
-      assert_error_sent(
-        :not_found,
-        fn ->
-          put(conn, Routes.video_path(conn, :update, video, video: @create_attrs))
-        end
-      )
+    assert_error_sent(
+      :not_found,
+      fn ->
+        put(conn, Routes.video_path(conn, :update, video, video: @create_attrs))
+      end
+    )
 
-      assert_error_sent(
-        :not_found,
-        fn ->
-          delete(conn, Routes.video_path(conn, :delete, video))
-        end
-      )
-    end
+    assert_error_sent(
+      :not_found,
+      fn ->
+        delete(conn, Routes.video_path(conn, :delete, video))
+      end
+    )
+  end
 end

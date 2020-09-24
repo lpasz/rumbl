@@ -5,7 +5,7 @@ defmodule RumblWeb.VideoChannel do
     updated_socket = assign(socket, :video_id, String.to_integer(video_id))
 
     :timer.send_interval(5_000, :ping)
-    
+
     {:ok, updated_socket}
   end
 

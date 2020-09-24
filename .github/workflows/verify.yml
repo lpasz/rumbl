@@ -60,6 +60,7 @@ jobs:
           mix deps.get
           (cd assets && yarn)
 
+      - run: mix format
       - run: mix format --check-formatted
       - run: mix test
         
