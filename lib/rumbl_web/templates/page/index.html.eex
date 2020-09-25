@@ -2,5 +2,5 @@
   <h1>
     <%= gettext "Welcome to %{name}!", name: "Rumbl.io" %>
   </h1>
-  <p>Woman i got to ramble</p>
+  <p>Peace-of-mind from prototype to production</p>
 </section>
