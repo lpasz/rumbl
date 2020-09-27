@@ -30,8 +30,8 @@ let Video = {
         // Start listen to click event
         postButton.addEventListener( "click", e =>
         {
-            console.log("\n\nMESSAGE INPUT: \n")
-            console.log(msgInput)
+            console.log( "\n\nMESSAGE INPUT: \n" )
+            console.log( msgInput )
             // create payload obj with 
             let payload = { body: msgInput.value, at: Player.getCurrentTime() }
             videoChannel.push( "new_annotation", payload )

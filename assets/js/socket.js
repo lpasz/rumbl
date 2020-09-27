@@ -10,7 +10,7 @@ let socket = new Socket(
     {
       console.log( `${ kind }: ${ msg }`, data )
     }
- 
-  })
+
+  } )
 
 export default socket
