@@ -46,7 +46,15 @@ let Video = {
         } )
 
         videoChannel.join()
-            .receive( "ok", resp => console.log( "joined te video channel", resp ) )
+            .receive( "ok", ( { annotations } ) =>
+            {
+                annotations.forEach( a =>
+                {                    
+                    this.renderAnnotation( msgContainer, a ) 
+                    
+                }
+                )
+            } )
             .receive( "error", reason => console.log( "join failed", reason ) )
     },
 
@@ -66,7 +74,7 @@ let Video = {
              </a>`
 
         msgContainer.appendChild( template )
-        msgContainer.scrollTop = msgContainers.scrollHeight
+        msgContainer.scrollTop = msgContainer.scrollHeight
     }
 
 }
