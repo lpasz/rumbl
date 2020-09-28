@@ -1,5 +1,9 @@
 # Rumbl
 
+To see a working example access:
+
+https://rumbl-app.gigalixirapp.com
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
