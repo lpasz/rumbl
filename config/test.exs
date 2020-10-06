@@ -1,6 +1,14 @@
 use Mix.Config
 
 # Configure your database
+config :rumbl, Rumbl.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "rumbl_test",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox
+
+# Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
