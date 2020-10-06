@@ -25,7 +25,10 @@ let Video = {
         let msgContainer = document.getElementById( "msg-container" )
         let msgInput = document.getElementById( "msg-input" )
         let postButton = document.getElementById( "msg-submit" )
-        let videoChannel = socket.channel( "videos:" + videoId )
+        let lastSeenId = 0
+        let videoChannel = socket.channel(
+            "videos:" + videoId,
+            () => { return { last_seen_id: lastSeenId } } )
 
         // Start listen to click event
         postButton.addEventListener( "click", e =>
@@ -54,13 +57,19 @@ let Video = {
         // on event "new_annotation trigger by click"
         videoChannel.on( "new_annotation", ( resp ) =>
         {
+            lastSeenId = resp.id
             this.renderAnnotation( msgContainer, resp )
         } )
 
         videoChannel.join()
-            .receive( "ok", ( { annotations } ) =>
+            .receive( "ok", resp =>
             {
-                this.scheduleMessages( msgContainer, annotations )
+                let ids = resp.annotations.map( ann => ann.id )
+                if ( ids.length > 0 )
+                {
+                    lastSeenId = Math.max( ...ids )
+                    this.scheduleMessages( msgContainer, resp.annotations )
+                }
             } )
             .receive( "error", reason => console.log( "join failed", reason ) )
     },
