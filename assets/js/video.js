@@ -38,10 +38,10 @@ let Video = {
             () =>
             {
                 userList.innerHTML = presence.list(
-                    ( id, { metas: [ first, ...rest ] } ) =>
+                    ( id, { user: user, metas: [ first, ...rest ] } ) =>
                     {
                         let count = rest.length + 1
-                        return `<li>${ id }: (${ count })</li>`
+                        return `<li>${ user.username }: (${ count })</li>`
 
                     } ).join( "" )
             } )
@@ -117,7 +117,8 @@ let Video = {
             () =>
             {
                 let ctime = Player.getCurrentTime()
-                let remaining = this.renderAtTime( annotations, ctime, msgContainer )
+                let remaining =
+                    this.renderAtTime( annotations, ctime, msgContainer )
                 this.scheduleMessages( msgContainer, remaining )
             },
             1000 )
