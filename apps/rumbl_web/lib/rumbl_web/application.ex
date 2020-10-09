@@ -1,4 +1,4 @@
-defmodule Rumbl.Application do
+defmodule RumblWeb.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -6,24 +6,18 @@ defmodule Rumbl.Application do
   use Application
 
   def start(_type, _args) do
+    # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
-      Rumbl.Repo,
-      # Start the Telemetry supervisor
-      RumblWeb.Telemetry,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: Rumbl.PubSub},
-      # Start the Endpoint (http/https)
+      # Start the endpoint when the application starts
       RumblWeb.Endpoint,
-      # Start a worker by calling: Rumbl.Worker.start_link(arg)
-      # {Rumbl.Worker, arg}
-      # Start the Presence 
-      RumblWeb.Presence
+      {Phoenix.PubSub, [name: RumblWeb.PubSub, adapter: Phoenix.PubSub.PG2]}
+      # Starts a worker by calling: RumblWeb.Worker.start_link(arg)
+      # {RumblWeb.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Rumbl.Supervisor]
+    opts = [strategy: :one_for_one, name: RumblWeb.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
