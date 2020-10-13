@@ -2,7 +2,7 @@ defmodule RumblWeb.VideoChannel do
   use RumblWeb, :channel
 
   alias Rumbl.{Accounts, Multimedia}
-  alias RumblWeb.AnnotationView
+  alias RumblWeb.{AnnotationView, Presence}
 
   def join("videos:" <> video_id, params, socket) do
     send(self(), :after_join)
@@ -23,10 +23,11 @@ defmodule RumblWeb.VideoChannel do
   end
 
   def handle_info(:after_join, socket) do
-    push(socket, "presence_state", RumblWeb.Presence.list(socket))
+    presence_list = Presence.list(socket)
+    push(socket, "presence_state", presence_list)
 
     {:ok, _} =
-      RumblWeb.Presence.track(
+      Presence.track(
         socket,
         socket.assigns.user_id,
         %{device: "browser"}
@@ -35,17 +36,18 @@ defmodule RumblWeb.VideoChannel do
     {:noreply, socket}
   end
 
-  @spec handle_in(
-          <<_::112>>,
-          :invalid | %{optional(:__struct__) => none, optional(atom | binary) => any},
-          atom | %{assigns: atom | %{user_id: any, video_id: any}}
-        ) :: {:reply, :ok | {:error, %{errors: any}}, atom | %{assigns: atom | %{video_id: any}}}
+
   def handle_in(event, params, socket) do
     user = Accounts.get_user!(socket.assigns.user_id)
     handle_in(event, params, user, socket)
   end
 
   def handle_in("new_annotation" = new_annotation, params, user, socket) do
+    IO.inspect(%{
+      new_annotation: new_annotation,
+      params: params,
+      user: user
+      })
     case Multimedia.annotate_video(user, socket.assigns.video_id, params) do
       {:ok, annotation} ->
         broadcast_data = %{
