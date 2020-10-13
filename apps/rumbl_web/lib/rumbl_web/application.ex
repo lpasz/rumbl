@@ -10,8 +10,9 @@ defmodule RumblWeb.Application do
     children = [
       # Start the endpoint when the application starts
       RumblWeb.Endpoint,
-      {Phoenix.PubSub, [name: RumblWeb.PubSub]},
-      RumblWeb.Presence
+      {Phoenix.PubSub, name: RumblWeb.PubSub},
+      RumblWeb.Presence,
+      RumblWeb.Telemetry,
       # Starts a worker by calling: RumblWeb.Worker.start_link(arg)
       # {RumblWeb.Worker, arg},
     ]
