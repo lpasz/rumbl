@@ -11,12 +11,8 @@ defmodule RumblWeb.Endpoint do
   ]
 
   socket "/socket", RumblWeb.UserSocket,
-    websocket: true,
-    longpoll: [
-      check_origin: [
-        "https://rumbl-app.gigalixirapp.com"
-      ]
-    ]
+    websocket: [check_origin: false],
+    longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 

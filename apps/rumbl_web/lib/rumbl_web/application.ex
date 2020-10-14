@@ -12,7 +12,7 @@ defmodule RumblWeb.Application do
       RumblWeb.Endpoint,
       {Phoenix.PubSub, name: RumblWeb.PubSub},
       RumblWeb.Presence,
-      RumblWeb.Telemetry,
+      RumblWeb.Telemetry
       # Starts a worker by calling: RumblWeb.Worker.start_link(arg)
       # {RumblWeb.Worker, arg},
     ]

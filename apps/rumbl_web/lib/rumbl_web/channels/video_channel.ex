@@ -36,7 +36,6 @@ defmodule RumblWeb.VideoChannel do
     {:noreply, socket}
   end
 
-
   def handle_in(event, params, socket) do
     user = Accounts.get_user!(socket.assigns.user_id)
     handle_in(event, params, user, socket)
@@ -47,7 +46,8 @@ defmodule RumblWeb.VideoChannel do
       new_annotation: new_annotation,
       params: params,
       user: user
-      })
+    })
+
     case Multimedia.annotate_video(user, socket.assigns.video_id, params) do
       {:ok, annotation} ->
         broadcast_data = %{
