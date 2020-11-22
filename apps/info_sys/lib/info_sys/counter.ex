@@ -1,20 +1,31 @@
 defmodule InfoSys.Counter do
-  use GenServer
+  # The only restart option that worked
+  use GenServer, restart: :temporary
 
-  def inc(pid \\ __MODULE__) do
+  def child_specs(arg) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [arg]},
+      shutdown: 5000,
+      restart: :temporary,
+      type: :worker
+    }
+  end
+
+  def inc(pid) do
     GenServer.cast(pid, :inc)
   end
 
-  def dec(pid \\ __MODULE__) do
+  def dec(pid) do
     GenServer.cast(pid, :dec)
   end
 
-  def val(pid \\ __MODULE__) do
+  def val(pid) do
     GenServer.call(pid, :val)
   end
 
   def start_link(initial_val) do
-    GenServer.start_link(__MODULE__, initial_val, name: __MODULE__)
+    GenServer.start_link(__MODULE__, initial_val)
   end
 
   def init(initial_val) do
