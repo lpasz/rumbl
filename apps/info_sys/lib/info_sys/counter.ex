@@ -1,39 +1,46 @@
 defmodule InfoSys.Counter do
-  def inc(pid), do: send(pid, :inc)
+  use GenServer
 
-  def dec(pid), do: send(pid, :dec)
-
-  def val(pid, timeout \\ 5000) do
-    ref = make_ref()
-    send(pid, {:value, self(), ref})
-
-    receive do
-      {^ref, value} -> value
-    after
-      timeout -> exit(:timeout)
-    end
+  def inc(pid \\ __MODULE__) do
+    GenServer.cast(pid, :inc)
   end
 
-  def start_link(initial_value) do
-    {
-      :ok,
-      spawn_link(fn ->
-        listen(initial_value)
-      end)
-    }
+  def dec(pid \\ __MODULE__) do
+    GenServer.cast(pid, :dec)
   end
 
-  defp listen(value) do
-    receive do
-      :inc ->
-        listen(value + 1)
+  def val(pid \\ __MODULE__) do
+    GenServer.call(pid, :val)
+  end
 
-      :dec ->
-        listen(value - 1)
+  def start_link(initial_val) do
+    GenServer.start_link(__MODULE__, initial_val, name: __MODULE__)
+  end
 
-      {:value, sender, ref} ->
-        send(sender, {ref, value})
-        listen(value)
-    end
+  def init(initial_val) do
+    Process.send_after(self(), :tick, 1000)
+    {:ok, initial_val}
+  end
+
+  def handle_cast(:inc, val) do
+    {:noreply, val + 1}
+  end
+
+  def handle_cast(:dec, val) do
+    {:noreply, val - 1}
+  end
+
+  def handle_call(:val, _from, val) do
+    {:reply, val, val}
+  end
+
+  def handle_info(:tick, val) when val <= 0 do
+    raise("boom-sakalaka!")
+  end
+
+  def handle_info(:tick, val) do
+    IO.puts("tick #{val}")
+    Process.send_after(self(), :tick, 1000)
+    {:noreply, val - 1}
   end
 end
